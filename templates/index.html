@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Climate Explorer | 3D</title>
+    
+    <!-- CesiumJS Assets -->
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Browser Tab Icon Fix -->
+    <link rel="icon" href="data:,">
+</head>
+<body>
+
+    <!-- 1. 3D Globe -->
+    <div id="cesiumContainer"></div>
+
+    <!-- 2. UI Toolbar (Zoom Lock) -->
+    <div id="ui-controls">
+        <button id="lockZoomBtn" onclick="toggleZoomLock()" title="Lock Zoom">
+            <span class="icon">🔓</span> Lock Zoom: <span id="lockStatus">OFF</span>
+        </button>
+    </div>
+
+    <!-- 3. Bottom Dashboard Panel -->
+    <div id="bottomPanel" class="hidden">
+        <button class="close-btn" onclick="closePanel()">&times;</button>
+        
+        <!-- Header, Live Weather, and Alert -->
+        <div class="panel-header">
+            
+            <div class="header-titles">
+                <h2 id="locationName">Climate Analysis</h2>
+                <p id="coordsText">Click a point on the globe</p>
+            </div>
+            
+            <!-- NEW: Live Real-Time Weather Widget -->
+            <div id="liveWeatherWidget" class="hidden">
+                <div class="live-stat">
+                    <span class="live-label">Current Temp</span>
+                    <span id="liveTemp" class="live-value">--</span>
+                </div>
+                <div class="live-divider"></div>
+                <div class="live-stat">
+                    <span class="live-label">Wind Speed</span>
+                    <span id="liveWind" class="live-value">--</span>
+                </div>
+                <div class="live-divider"></div>
+                <div class="live-stat">
+                    <span class="live-label">Humidity</span>
+                    <span id="liveHumidity" class="live-value">--</span>
+                </div>
+            </div>
+
+            <!-- Global Warming Alert Badge -->
+            <div id="warmingAlert" class="hidden">
+                <span class="alert-icon">⚠️</span> 
+                <span class="alert-text">Warning: Warming Trend Detected</span>
+            </div>
+            
+        </div>
+
+        <hr class="divider">
+
+        <!-- 3-Column Charts Grid (Historical + Predictions) -->
+        <div class="charts-grid">
+            
+            <!-- Max -->
+            <div class="analysis-col">
+                <h3 class="section-title">Yearly Peak (Max)</h3>
+                <div class="stats-row">
+                    <span>Trend: <b id="maxTrend">--</b></span>
+                    <span>2025: <b id="maxForecast" class="forecast-color">--</b></span>
+                </div>
+                <div class="chart-wrapper"><canvas id="maxChart"></canvas></div>
+            </div>
+
+            <!-- Average -->
+            <div class="analysis-col">
+                <h3 class="section-title">Yearly Average</h3>
+                <div class="stats-row">
+                    <span>Trend: <b id="avgTrend">--</b></span>
+                    <span>2025: <b id="avgForecast" class="forecast-color">--</b></span>
+                </div>
+                <div class="chart-wrapper"><canvas id="avgChart"></canvas></div>
+            </div>
+
+            <!-- Min -->
+            <div class="analysis-col">
+                <h3 class="section-title">Yearly Floor (Min)</h3>
+                <div class="stats-row">
+                    <span>Trend: <b id="minTrend">--</b></span>
+                    <span>2025: <b id="minForecast" class="forecast-color">--</b></span>
+                </div>
+                <div class="chart-wrapper"><canvas id="minChart"></canvas></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Chart.js and Custom Script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
